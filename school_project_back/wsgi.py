@@ -8,6 +8,13 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
 """
 
 import os
+import sys
+from pathlib import Path  # ✅ Para construir rutas de forma segura
+
+# ✅ Agregamos la carpeta "apps/" al PYTHONPATH
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(BASE_DIR / 'apps'))
+
 
 from django.core.wsgi import get_wsgi_application
 
