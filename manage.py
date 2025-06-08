@@ -2,10 +2,14 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+from pathlib import Path  # ✅ Importar para manejar rutas correctamente
 
 def main():
     """Run administrative tasks."""
+    
+    # ✅ Agregar la carpeta /apps al PYTHONPATH
+    BASE_DIR = Path(__file__).resolve().parent
+    sys.path.append(str(BASE_DIR / 'apps'))
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'school_project_back.settings')
     try:
         from django.core.management import execute_from_command_line

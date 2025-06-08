@@ -36,7 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', 
+    'rest_framework',  # Django REST Framework for building APIs
+    'apps.usuarios',  # Custom app for user management
+    'apps.alumnos',  # Custom app for student management
+    
     'rest_framework',
     #apps
     'curso'
@@ -85,6 +89,13 @@ WSGI_APPLICATION = 'school_project_back.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 DATABASES = {
     'default': {
