@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Curso, Materia
+
+from apps.curso.models.curso import Curso, Materia
 
 class CursoSerializer(serializers.ModelSerializer):
     class Meta:

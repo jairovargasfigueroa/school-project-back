@@ -40,10 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',  # Django REST Framework for building APIs
     'apps.usuarios',  # Custom app for user management
     'apps.alumnos',  # Custom app for student management
-    
-    'rest_framework',
-    #apps
-    'curso'
+    'apps.curso',
 ]
 
 MIDDLEWARE = [
