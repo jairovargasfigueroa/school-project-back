@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles', 
+    'django_extensions', #extension que ayuda a ver una lista de todas las urls
     'rest_framework',  # Django REST Framework for building APIs
     'apps.usuarios',  # Custom app for user management
-    'apps.alumnos',  # Custom app for student management
     'apps.curso',
 ]
 
