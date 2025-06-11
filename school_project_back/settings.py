@@ -40,7 +40,13 @@ INSTALLED_APPS = [
     'django_extensions', #extension que ayuda a ver una lista de todas las urls
     'rest_framework',  # Django REST Framework for building APIs
     'apps.usuarios',  # Custom app for user management
-    'apps.curso',
+    'apps.cursos',  # Custom app for courses management
+    'apps.gestiones',  # Custom app for management functionalities
+    'apps.materias',  # Custom app for enrollments management
+    'apps.evaluaciones',  # Custom app for assignments management
+    'apps.notas',  # Custom app for grades management
+    'apps.asistencias',  # Custom app for attendance management
+    'apps.libretas',  # Custom app for report cards management
 ]
 
 AUTH_USER_MODEL = 'usuarios.Usuario'

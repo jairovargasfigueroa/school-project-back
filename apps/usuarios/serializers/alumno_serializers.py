@@ -25,7 +25,7 @@
 #         # Add more validations as needed
 #         return data
 
-import re
+
 from rest_framework import serializers
 from apps.usuarios.models import Alumno, Usuario
 
@@ -45,6 +45,9 @@ class AlumnoWriteSerializer(serializers.Serializer):
     codigo = serializers.CharField()
     fecha_nacimiento = serializers.DateField()
     direccion = serializers.CharField()
+    curso_id = serializers.IntegerField()
+    
+    
 
 
 class AlumnoReadSerializer(serializers.ModelSerializer):
@@ -59,6 +62,8 @@ class AlumnoReadSerializer(serializers.ModelSerializer):
     genero = serializers.CharField(source='usuario.genero', read_only=True)
     estado = serializers.CharField(source='usuario.estado', read_only=True)
 
+    curso_id = serializers.IntegerField(source='curso.id', read_only=True)
+    curso_nombre = serializers.CharField(source='curso.nombre', read_only=True)  # o el campo que definas
     class Meta:
         model = Alumno
         fields = [
@@ -74,5 +79,7 @@ class AlumnoReadSerializer(serializers.ModelSerializer):
             'ci',
             'telefono',
             'genero',
-            'estado'
+            'estado',
+            'curso_id',
+            'curso_nombre'
         ]
