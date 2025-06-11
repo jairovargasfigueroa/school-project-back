@@ -8,9 +8,10 @@ class Alumno(models.Model):
     """
     
     usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='alumno')
-    codigo = models.CharField(max_length=20)
+    codigo = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
     direccion = models.CharField(max_length=255)
+    curso = models.ForeignKey('cursos.Curso', on_delete=models.SET_NULL, null=True, related_name='alumnos')
 
     # class Meta:
     #     verbose_name = "Alumno"

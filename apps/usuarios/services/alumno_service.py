@@ -70,9 +70,11 @@ class AlumnoService:
             'genero': data.pop('genero'),
             'estado': data.pop('estado'),
         }
-
+        
+        curso_id = data.pop('curso_id')  # <-- 🔥 ESTA LÍNEA
         usuario = UsuarioService.crear_usuario(datos_usuario)
-        alumno = Alumno.objects.create(usuario=usuario, **data)
+        alumno = Alumno.objects.create(usuario=usuario,curso_id = curso_id, **data)
+        
         return alumno
 
     @staticmethod

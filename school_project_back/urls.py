@@ -20,5 +20,11 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('apps.usuarios.urls')),  # <-- aquí se incluyen las rutas de alumnos
-    
+    path('api/', include('apps.cursos.urls')),  # <-- aquí se incluyen las rutas de cursos
+    path('api/', include('apps.gestiones.urls')),  # <-- aquí se incluyen las rutas de gestiones
+    path('api/', include('apps.materias.urls')),  # <-- aquí se incluyen las rutas de materias
+    path('api/', include('apps.evaluaciones.urls')),  # <-- aquí se incluyen las rutas de evaluaciones
+    path('api/', include('apps.notas.urls')),  # <-- aquí se incluyen las rutas de notas
+    path('api/', include('apps.asistencias.urls')),  # <-- aquí se incluyen las rutas de asistencias
+    path('api/libretas/', include('apps.libretas.urls')),  # <-- aquí se incluyen las rutas de libretas
 ]

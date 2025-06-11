@@ -13,6 +13,7 @@ class Usuario(AbstractUser):
     # Puedes agregar campos adicionales aquí si es necesario
     # Por ejemplo, un campo de perfil o preferencias del usuario
     
+    username = models.CharField(max_length=150, unique=True)
 
     class Rol(models.TextChoices):
         ALUMNO = 'alumno'
