@@ -1,6 +1,7 @@
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from apps.materias.models import Materia
 from apps.materias.serializers.materia_serializers import MateriaSerializer
 from apps.materias.services.materia_service import MateriaService
 from django.core.exceptions import ObjectDoesNotExist
@@ -17,16 +18,20 @@ class MateriasFilter(filters.FilterSet):
             'gestion_id': ['exact'],
         }
 
-class MateriaViewSet(ViewSet):
-    """
-    ViewSet para gestionar materias.
-    """
+class MateriaViewSet(ModelViewSet):
+    serializer_class = MateriaSerializer
 
-    def list(self, request):
-        materias = MateriaService.listar_materias()
-        filtered_queryset = MateriasFilter(request.GET, queryset=materias).qs
-        serializer = MateriaSerializer(filtered_queryset, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        queryset = Materia.objects.all()
+        nombre = self.request.query_params.get("nombre")
+        curso_id = self.request.query_params.get("curso_id")
+
+        if nombre:
+            queryset = queryset.filter(nombre__icontains=nombre)
+        if curso_id:
+            queryset = queryset.filter(curso_id=curso_id)
+
+        return queryset
 
     def retrieve(self, request, pk=None):
         try:

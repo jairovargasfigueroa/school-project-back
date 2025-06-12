@@ -12,6 +12,13 @@ class Alumno(models.Model):
     fecha_nacimiento = models.DateField()
     direccion = models.CharField(max_length=255)
     curso = models.ForeignKey('cursos.Curso', on_delete=models.SET_NULL, null=True, related_name='alumnos')
+    padre = models.ForeignKey(
+        'usuarios.Padre',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='alumnos'
+    )
 
     # class Meta:
     #     verbose_name = "Alumno"

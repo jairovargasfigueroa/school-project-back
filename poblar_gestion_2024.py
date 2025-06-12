@@ -232,7 +232,7 @@ def crear_alumnos(curso):
             password='test1234',
             first_name=nombre[:30],
             last_name=apellido[:30],
-            rol='docente',
+            rol='alumno',
             ci=str(fake.random_number(digits=10))[:20],
             telefono=fake.numerify(text="##########")[:20],
             genero=random.choice(['M', 'F', 'O']),  # correcto según tu modelo

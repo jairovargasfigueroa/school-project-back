@@ -1,32 +1,28 @@
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from apps.notas.models.nota_evaluacion import NotaEvaluacion
+from apps.notas.models import NotaEvaluacion
 from apps.notas.serializers.nota_serializers import NotaEvaluacionSerializer
 from apps.notas.services.nota_service import NotaEvaluacionService
 from django.core.exceptions import ObjectDoesNotExist
 
-from django_filters import rest_framework as filters
+class NotaEvaluacionViewSet(ModelViewSet):
+    serializer_class = NotaEvaluacionSerializer
 
-class NotaFilter(filters.FilterSet):
-    class Meta:
-        model = NotaEvaluacion
-        fields = {
-            'alumno_id': ['exact'],
-            'evaluacion_id': ['exact'],
-            'evaluacion__tipo': ['exact', 'icontains'],
-            'evaluacion__nombre': ['icontains'],
-        }
+    def get_queryset(self):
+        queryset = NotaEvaluacion.objects.select_related( "evaluacion", "alumno")
+        alumno_id = self.request.query_params.get("alumno_id")
+        materia_id = self.request.query_params.get("materia_id")
+        gestion_id = self.request.query_params.get("gestion_id")
 
-class NotaEvaluacionViewSet(ViewSet):
+        # if alumno_id:
+        #     queryset = queryset.filter(alumno_id=alumno_id)
+        # if materia_id:
+        #     queryset = queryset.filter(materia_id=materia_id)
+        if gestion_id:
+            queryset = queryset.filter(evaluacion__gestion_id=gestion_id)
 
-    def list(self, request):
-        notas = NotaEvaluacionService.listar_notas_evaluacion()
-
-        filtered_queryset = NotaFilter(request.GET, queryset=notas).qs
-
-        serializer = NotaEvaluacionSerializer(filtered_queryset, many=True)
-        return Response(serializer.data)
+        return queryset
 
     def retrieve(self, request, pk=None):
         try:
@@ -35,13 +31,6 @@ class NotaEvaluacionViewSet(ViewSet):
             return Response(serializer.data)
         except ObjectDoesNotExist:
             return Response({"error": "Nota no encontrada"}, status=404)
-
-    # def create(self, request):
-    #     serializer = NotaEvaluacionSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         nota = NotaEvaluacionService.crear_nota(serializer.validated_data)
-    #         return Response(NotaEvaluacionSerializer(nota).data, status=201)
-    #     return Response({"error": serializer.errors}, status=400)
     
     def create(self, request):
         print("📦 Data recibida en POST:", request.data)  # Debug

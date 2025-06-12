@@ -15,15 +15,22 @@ class AlumnoFilter(filters.FilterSet):
         }
 
 class AlumnoViewSet(ModelViewSet):
-    """
-    ViewSet para manejar operaciones CRUD sobre alumnos.
-    """
+    
+    def get_queryset(self):
+        queryset = Alumno.objects.select_related("usuario", "curso")
+        curso_id = self.request.query_params.get("curso_id")
 
-    def list(self, request):
-        alumnos = AlumnoService.listar_alumnos()
-        filtered_queryset = AlumnoFilter(request.GET, queryset=alumnos).qs
-        serializer = AlumnoReadSerializer(filtered_queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if curso_id:
+            queryset = queryset.filter(curso_id=curso_id)
+
+        return queryset
+
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return AlumnoReadSerializer
+        return AlumnoWriteSerializer
+
 
     def retrieve(self, request, pk=None):
         alumno = AlumnoService.obtener_alumno_por_id(pk)
@@ -54,73 +61,3 @@ class AlumnoViewSet(ModelViewSet):
         if AlumnoService.eliminar_alumno(pk):
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({"error": "Alumno no encontrado"}, status=status.HTTP_404_NOT_FOUND)
-#     def create(self, request, *args, **kwargs):
-#         try:
-#             #LLAMO AL SERIALIZADOR PARA VALIDAR LOS DATOS DEL ALUMNO
-#             serializer = self.get_serializer(data = request.data)
-#             serializer.is_valid(raise_exception=True)
-#             alumno = crear_Alumno(serializer.validated_data)
-#             return Response({
-#                 "message": "Alumno creado exitosamente",
-#                 "data": self.get_serializer(alumno).data
-#             }, status=status.HTTP_201_CREATED)
-        
-#         except Exception as e:
-#             return Response({"error": str(e)}, status=400)
-#         except Exception as e:
-#             return Response({"error": "An unexpected error occurred."}, status=500)
-            
-#     def update(self, request, *args, **kwargs):
-#         try:
-#             # Obtengo el objeto Alumno a actualizar
-#             alumno = self.get_object()
-#             serializer = self.get_serializer(alumno, data=request.data, partial=True)
-#             serializer.is_valid(raise_exception=True)
-#             alumno = serializer.save()
-#             return Response({
-#                 "message": "Alumno actualizado exitosamente",
-#                 "data": self.get_serializer(alumno).data
-#             }, status=status.HTTP_200_OK)
-        
-#         except Exception as e:
-#             return Response({"error": str(e)}, status=400)
-#         except Exception as e:
-#             return Response({"error": "An unexpected error occurred."}, status=500)
-    
-#     def destroy(self, request, *args, **kwargs):
-#         try:
-#             # Obtengo el objeto Alumno a eliminar
-#             alumno = self.get_object()
-#             alumno.delete()
-#             return Response({"message": "Alumno eliminado exitosamente"}, status=status.HTTP_204_NO_CONTENT)
-        
-#         except Exception as e:
-#             return Response({"error": str(e)}, status=400)
-#         except Exception as e:
-#             return Response({"error": "An unexpected error occurred."}, status=500)
-        
-#     def retrieve(self, request, *args, **kwargs):
-#         try:
-#             # Obtengo el objeto Alumno por ID
-#             alumno = self.get_object()
-#             return Response(self.get_serializer(alumno).data, status=status.HTTP_200_OK)
-        
-#         except Exception as e:
-#             return Response({"error": str(e)}, status=400)
-#         except Exception as e:
-#             return Response({"error": "An unexpected error occurred."}, status=500)                
-    
-#     def list(self, request, *args, **kwargs):
-#         try:
-#             # Obtengo todos los objetos Alumno
-#             alumnos = self.get_queryset()
-#             serializer = self.get_serializer(alumnos, many=True)
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-        
-#         except Exception as e:
-#             return Response({"error": str(e)}, status=400)
-#         except Exception as e:
-#             return Response({"error": "An unexpected error occurred."}, status=500)
-    
-   
-   

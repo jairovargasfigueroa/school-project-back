@@ -1,20 +1,29 @@
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from apps.cursos.serializers.curso_serializers import CursoSerializer
 from django.core.exceptions import ObjectDoesNotExist
+from apps.cursos.models import Curso
 from apps.cursos.services.curso_service import CursoService
 
 
-class CursoViewSet(ViewSet):
-    """
-    ViewSet para gestionar CRUD de cursos.
-    """
+class CursoViewSet(ModelViewSet):
+    serializer_class = CursoSerializer 
 
-    def list(self, request):
-        cursos = CursoService.listar_cursos()
-        serializer = CursoSerializer(cursos, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        queryset = Curso.objects.all()
+        nivel = self.request.query_params.get("nivel")
+        turno = self.request.query_params.get("turno")
+
+        if nivel:
+            queryset = queryset.filter(nivel__iexact=nivel)
+
+        if turno:
+            queryset = queryset.filter(turno__iexact=turno)
+
+        return queryset
+
+    
 
     def retrieve(self, request, pk=None):
         try:

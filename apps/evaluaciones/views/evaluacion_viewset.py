@@ -1,32 +1,29 @@
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from apps.evaluaciones.models import Evaluacion
 from apps.evaluaciones.serializers.evaluacion_serializers import EvaluacionSerializer
 from apps.evaluaciones.services.evaluacion_service import EvaluacionService
 from django.core.exceptions import ObjectDoesNotExist
 
-from django_filters import rest_framework as filters
-from apps.evaluaciones.models import Evaluacion
+class EvaluacionViewSet(ModelViewSet):
+    serializer_class = EvaluacionSerializer
 
-class EvaluacionFilter(filters.FilterSet):
-    class Meta:
-        model = Evaluacion
-        fields = {
-            'materia': ['exact'],
-            'gestion': ['exact'],
-            'tipo': ['exact'],
-            'dimension': ['exact'],
-            'trimestre': ['exact'],
-        }
+    def get_queryset(self):
+        queryset = Evaluacion.objects.select_related("materia" ,"gestion")
+        # curso_id = self.request.query_params.get("curso_id")
+        # materia_id = self.request.query_params.get("materia_id")
+        # trimestre_id = self.request.query_params.get("trimestre_id")
 
-class EvaluacionViewSet(ViewSet):
+        # if curso_id:
+        #     queryset = queryset.filter(curso_id=curso_id)
+        # if materia_id:
+        #     queryset = queryset.filter(materia_id=materia_id)
+        # if trimestre_id:
+        #     queryset = queryset.filter(trimestre_id=trimestre_id)
 
-    def list(self, request):
-        evaluaciones = EvaluacionService.listar_evaluaciones()
-        filtered_queryset = EvaluacionFilter(request.GET, queryset=evaluaciones).qs
-        serializer = EvaluacionSerializer(filtered_queryset, many=True)
-        return Response(serializer.data)
-
+        return queryset
+    
     def retrieve(self, request, pk=None):
         try:
             evaluacion = EvaluacionService.obtener_evaluacion_por_id(pk)
