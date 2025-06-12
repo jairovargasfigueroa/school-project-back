@@ -1,15 +1,28 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from apps.asistencias.models.asistencia import Asistencia
 from apps.asistencias.serializers.asistencia_serilaizers import AsistenciaSerializer
 from apps.asistencias.services.asistencia_service import AsistenciaService
 from django.core.exceptions import ObjectDoesNotExist
+
+from django_filters import rest_framework as filters
+
+
+class AsistenciaFilter(filters.FilterSet):
+    class Meta:
+        model = Asistencia
+        fields = ['alumno', 'materia', 'gestion', 'fecha', 'alumno__usuario__first_name']
+
 
 class AsistenciaViewSet(ViewSet):
 
     def list(self, request):
         asistencias = AsistenciaService.listar_asistencias()
-        serializer = AsistenciaSerializer(asistencias, many=True)
+
+        filtered_queryset = AsistenciaFilter(request.GET, queryset=asistencias).qs
+
+        serializer = AsistenciaSerializer(filtered_queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):

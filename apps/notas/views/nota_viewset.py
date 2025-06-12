@@ -1,15 +1,31 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from apps.notas.models.nota_evaluacion import NotaEvaluacion
 from apps.notas.serializers.nota_serializers import NotaEvaluacionSerializer
 from apps.notas.services.nota_service import NotaEvaluacionService
 from django.core.exceptions import ObjectDoesNotExist
+
+from django_filters import rest_framework as filters
+
+class NotaFilter(filters.FilterSet):
+    class Meta:
+        model = NotaEvaluacion
+        fields = {
+            'alumno_id': ['exact'],
+            'evaluacion_id': ['exact'],
+            'evaluacion__tipo': ['exact', 'icontains'],
+            'evaluacion__nombre': ['icontains'],
+        }
 
 class NotaEvaluacionViewSet(ViewSet):
 
     def list(self, request):
         notas = NotaEvaluacionService.listar_notas_evaluacion()
-        serializer = NotaEvaluacionSerializer(notas, many=True)
+
+        filtered_queryset = NotaFilter(request.GET, queryset=notas).qs
+
+        serializer = NotaEvaluacionSerializer(filtered_queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):

@@ -5,11 +5,26 @@ from apps.evaluaciones.serializers.evaluacion_serializers import EvaluacionSeria
 from apps.evaluaciones.services.evaluacion_service import EvaluacionService
 from django.core.exceptions import ObjectDoesNotExist
 
+from django_filters import rest_framework as filters
+from apps.evaluaciones.models import Evaluacion
+
+class EvaluacionFilter(filters.FilterSet):
+    class Meta:
+        model = Evaluacion
+        fields = {
+            'materia': ['exact'],
+            'gestion': ['exact'],
+            'tipo': ['exact'],
+            'dimension': ['exact'],
+            'trimestre': ['exact'],
+        }
+
 class EvaluacionViewSet(ViewSet):
 
     def list(self, request):
         evaluaciones = EvaluacionService.listar_evaluaciones()
-        serializer = EvaluacionSerializer(evaluaciones, many=True)
+        filtered_queryset = EvaluacionFilter(request.GET, queryset=evaluaciones).qs
+        serializer = EvaluacionSerializer(filtered_queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):

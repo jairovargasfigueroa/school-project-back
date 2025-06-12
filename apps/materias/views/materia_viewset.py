@@ -4,6 +4,18 @@ from rest_framework import status
 from apps.materias.serializers.materia_serializers import MateriaSerializer
 from apps.materias.services.materia_service import MateriaService
 from django.core.exceptions import ObjectDoesNotExist
+from apps.materias.models import Materia
+
+from django_filters import rest_framework as filters
+
+class MateriasFilter(filters.FilterSet):
+    class Meta:
+        model = Materia
+        fields = {
+            'curso_id': ['exact'],
+            'docente_id': ['exact'],
+            'gestion_id': ['exact'],
+        }
 
 class MateriaViewSet(ViewSet):
     """
@@ -12,7 +24,8 @@ class MateriaViewSet(ViewSet):
 
     def list(self, request):
         materias = MateriaService.listar_materias()
-        serializer = MateriaSerializer(materias, many=True)
+        filtered_queryset = MateriasFilter(request.GET, queryset=materias).qs
+        serializer = MateriaSerializer(filtered_queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):

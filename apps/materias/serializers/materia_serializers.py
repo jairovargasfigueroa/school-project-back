@@ -2,9 +2,9 @@ from rest_framework import serializers
 from apps.materias.models import Materia
 
 class MateriaSerializer(serializers.ModelSerializer):
-    curso_id = serializers.IntegerField(write_only=True)
-    docente_id = serializers.IntegerField(write_only=True)
-    gestion_id = serializers.IntegerField(write_only=True)
+    curso_id = serializers.IntegerField()
+    docente_id = serializers.IntegerField()
+    gestion_id = serializers.IntegerField()
 
     curso_nombre = serializers.CharField(source='curso.nombre', read_only=True)
     docente_nombre = serializers.CharField(source='docente.usuario.get_full_name', read_only=True)

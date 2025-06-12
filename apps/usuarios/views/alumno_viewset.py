@@ -5,7 +5,14 @@ from apps.usuarios.serializers.alumno_serializers import AlumnoReadSerializer, A
 from apps.usuarios.services.alumno_service import AlumnoService
 from rest_framework import status
 
+from django_filters import rest_framework as filters
 
+class AlumnoFilter(filters.FilterSet):
+    class Meta:
+        model = Alumno
+        fields = {
+            'curso_id': ['exact'],
+        }
 
 class AlumnoViewSet(ModelViewSet):
     """
@@ -14,7 +21,8 @@ class AlumnoViewSet(ModelViewSet):
 
     def list(self, request):
         alumnos = AlumnoService.listar_alumnos()
-        serializer = AlumnoReadSerializer(alumnos, many=True)
+        filtered_queryset = AlumnoFilter(request.GET, queryset=alumnos).qs
+        serializer = AlumnoReadSerializer(filtered_queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):

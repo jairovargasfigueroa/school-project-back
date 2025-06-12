@@ -6,8 +6,8 @@ class EvaluacionSerializer(serializers.ModelSerializer):
     gestion_anio = serializers.IntegerField(source='gestion.anio', read_only=True)
 
     # Campos de entrada (necesarios para el POST)
-    materia_id = serializers.IntegerField(write_only=True)
-    gestion_id = serializers.IntegerField(write_only=True)
+    materia_id = serializers.IntegerField()
+    gestion_id = serializers.IntegerField()
     
     class Meta:
         model = Evaluacion

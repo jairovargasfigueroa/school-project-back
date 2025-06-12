@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles', 
     'django_extensions', #extension que ayuda a ver una lista de todas las urls
+    'django_filters', #estencion para agregar los filtros
     'rest_framework',  # Django REST Framework for building APIs
     'apps.usuarios',  # Custom app for user management
     'apps.cursos',  # Custom app for courses management
@@ -68,7 +69,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 
