@@ -1,16 +1,28 @@
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from apps.notas.models import NotaEvaluacion
 from apps.notas.serializers.nota_serializers import NotaEvaluacionSerializer
 from apps.notas.services.nota_service import NotaEvaluacionService
 from django.core.exceptions import ObjectDoesNotExist
 
-class NotaEvaluacionViewSet(ViewSet):
+class NotaEvaluacionViewSet(ModelViewSet):
+    serializer_class = NotaEvaluacionSerializer
 
-    def list(self, request):
-        notas = NotaEvaluacionService.listar_notas_evaluacion()
-        serializer = NotaEvaluacionSerializer(notas, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        queryset = NotaEvaluacion.objects.select_related( "evaluacion", "alumno")
+        alumno_id = self.request.query_params.get("alumno_id")
+        materia_id = self.request.query_params.get("materia_id")
+        gestion_id = self.request.query_params.get("gestion_id")
+
+        # if alumno_id:
+        #     queryset = queryset.filter(alumno_id=alumno_id)
+        # if materia_id:
+        #     queryset = queryset.filter(materia_id=materia_id)
+        if gestion_id:
+            queryset = queryset.filter(evaluacion__gestion_id=gestion_id)
+
+        return queryset
 
     def retrieve(self, request, pk=None):
         try:
@@ -19,13 +31,6 @@ class NotaEvaluacionViewSet(ViewSet):
             return Response(serializer.data)
         except ObjectDoesNotExist:
             return Response({"error": "Nota no encontrada"}, status=404)
-
-    # def create(self, request):
-    #     serializer = NotaEvaluacionSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         nota = NotaEvaluacionService.crear_nota(serializer.validated_data)
-    #         return Response(NotaEvaluacionSerializer(nota).data, status=201)
-    #     return Response({"error": serializer.errors}, status=400)
     
     def create(self, request):
         print("📦 Data recibida en POST:", request.data)  # Debug

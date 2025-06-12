@@ -1,21 +1,24 @@
 # views/gestion_viewset.py
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from apps.gestiones.models import Gestion
 from apps.gestiones.serializers.gestiones_serializers import GestionSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from apps.gestiones.services.gestiones_services import GestionService
 
 
-class GestionViewSet(ViewSet):
-    """
-    ViewSet para gestionar CRUD de gestiones.
-    """
+class GestionViewSet(ModelViewSet):
+    serializer_class = GestionSerializer
 
-    def list(self, request):
-        gestiones = GestionService.listar_gestiones()
-        serializer = GestionSerializer(gestiones, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        queryset = Gestion.objects.all()
+        anio = self.request.query_params.get("anio")
+
+        if anio:
+            queryset = queryset.filter(anio=anio)
+
+        return queryset
 
     def retrieve(self, request, pk=None):
         try:

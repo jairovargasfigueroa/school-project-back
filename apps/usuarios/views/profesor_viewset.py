@@ -7,11 +7,24 @@ from apps.usuarios.services.profesor_service import ProfesorService
 from apps.usuarios.serializers.profesor_serializers import ProfesorWriteSerializer, ProfesorReadSerializer
 
 class ProfesorViewSet(ModelViewSet):
+    serializer_class = ProfesorReadSerializer
 
-    def list(self, request):
-        profesores = ProfesorService.listar_profesores()
-        serializer = ProfesorReadSerializer(profesores, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        queryset = Profesor.objects.select_related("usuario")
+        materia_id = self.request.query_params.get("materia_id")
+        curso_id = self.request.query_params.get("curso_id")
+
+        if materia_id:
+            queryset = queryset.filter(materias__id=materia_id)
+        if curso_id:
+            queryset = queryset.filter(cursos__id=curso_id)
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return ProfesorReadSerializer
+        return ProfesorWriteSerializer
 
     def retrieve(self, request, pk=None):
         profesor = ProfesorService.obtener_profesor_por_id(pk)

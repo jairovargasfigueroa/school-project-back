@@ -1,16 +1,28 @@
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from apps.asistencias.models import Asistencia
 from apps.asistencias.serializers.asistencia_serilaizers import AsistenciaSerializer
 from apps.asistencias.services.asistencia_service import AsistenciaService
 from django.core.exceptions import ObjectDoesNotExist
 
-class AsistenciaViewSet(ViewSet):
+class AsistenciaViewSet(ModelViewSet):
+    serializer_class = AsistenciaSerializer
 
-    def list(self, request):
-        asistencias = AsistenciaService.listar_asistencias()
-        serializer = AsistenciaSerializer(asistencias, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        queryset = Asistencia.objects.select_related("alumno", "materia")
+        # alumno_id = self.request.query_params.get("alumno_id")
+        # curso_id = self.request.query_params.get("curso_id")
+        # fecha = self.request.query_params.get("fecha")
+
+        # if alumno_id:
+        #     queryset = queryset.filter(alumno_id=alumno_id)
+        # if curso_id:
+        #     queryset = queryset.filter(curso_id=curso_id)
+        # if fecha:
+        #     queryset = queryset.filter(fecha=fecha)
+
+        return queryset
 
     def retrieve(self, request, pk=None):
         try:

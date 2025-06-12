@@ -1,5 +1,5 @@
 # apps/usuarios/views/director_viewset.py
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -7,12 +7,23 @@ from apps.usuarios.models import Director
 from apps.usuarios.services.director_service import DirectorService
 from apps.usuarios.serializers.director_serializers import DirectorWriteSerializer, DirectorReadSerializer
 
-class DirectorViewSet(ViewSet):
+class DirectorViewSet(ModelViewSet):
+    serializer_class = DirectorReadSerializer
 
-    def list(self, request):
-        directores = DirectorService.listar_directores()
-        serializer = DirectorReadSerializer(directores, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        queryset = Director.objects.select_related("usuario")
+        gestion_id = self.request.query_params.get("gestion_id")
+
+        if gestion_id:
+            queryset = queryset.filter(gestion_id=gestion_id)
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return DirectorReadSerializer
+        return DirectorWriteSerializer
+
 
     def retrieve(self, request, pk=None):
         director = DirectorService.obtener_director_por_id(pk)
