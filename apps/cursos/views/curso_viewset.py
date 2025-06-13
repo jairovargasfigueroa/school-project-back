@@ -6,11 +6,11 @@ from apps.cursos.serializers.curso_serializers import CursoSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from apps.cursos.models import Curso
 from apps.cursos.services.curso_service import CursoService
-from apps.usuarios.permissions import IsDirector
+from apps.usuarios.permissions import IsDirector, IsDocente
 
 
 class CursoViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated, IsDirector]
+    permission_classes = [IsAuthenticated, IsDirector|IsDocente]
     serializer_class = CursoSerializer 
 
     def get_queryset(self):

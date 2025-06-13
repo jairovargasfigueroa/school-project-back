@@ -6,7 +6,7 @@ class IsDirector(BasePermission):
 
 class IsDocente(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.rol == 'docente'
+        return request.user.is_authenticated and request.user.rol == 'profesor'
 
 class IsAlumno(BasePermission):
     def has_permission(self, request, view):

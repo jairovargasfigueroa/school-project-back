@@ -17,7 +17,7 @@ class Usuario(AbstractUser):
 
     class Rol(models.TextChoices):
         ALUMNO = 'alumno'
-        DOCENTE = 'docente'
+        PROFESOR = 'profesor'
         DIRECTOR = 'director'
         PADRE = 'padre'
     rol = models.CharField(
