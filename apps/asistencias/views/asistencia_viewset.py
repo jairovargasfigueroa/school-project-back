@@ -16,16 +16,16 @@ class AsistenciaViewSet(ModelViewSet):
 
     def get_queryset(self):
         queryset = Asistencia.objects.select_related("alumno", "materia")
-        # alumno_id = self.request.query_params.get("alumno_id")
-        # curso_id = self.request.query_params.get("curso_id")
-        # fecha = self.request.query_params.get("fecha")
+        alumno_id = self.request.query_params.get("alumno_id")
+        curso_id = self.request.query_params.get("curso_id")
+        fecha = self.request.query_params.get("fecha")
 
-        # if alumno_id:
-        #     queryset = queryset.filter(alumno_id=alumno_id)
-        # if curso_id:
-        #     queryset = queryset.filter(curso_id=curso_id)
-        # if fecha:
-        #     queryset = queryset.filter(fecha=fecha)
+        if alumno_id:
+            queryset = queryset.filter(alumno_id=alumno_id)
+        if curso_id:
+            queryset = queryset.filter(curso_id=curso_id)
+        if fecha:
+            queryset = queryset.filter(fecha=fecha)
 
         return queryset
 

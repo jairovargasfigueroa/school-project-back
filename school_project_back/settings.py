@@ -105,23 +105,6 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
 ]
 
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny', #luego cambiar el AllowAny por IsAuthenticated
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'],
-
-    'DEFAULT_PAGINATION_CLASS': 'utils.pagination.CustomPagination',
-    'PAGE_SIZE': 10,  # puedes ajustar este número como desees
-}
-
-
 ROOT_URLCONF = 'school_project_back.urls'
 
 TEMPLATES = [
