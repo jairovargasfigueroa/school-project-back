@@ -1,3 +1,4 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,7 +7,10 @@ from apps.evaluaciones.serializers.evaluacion_serializers import EvaluacionSeria
 from apps.evaluaciones.services.evaluacion_service import EvaluacionService
 from django.core.exceptions import ObjectDoesNotExist
 
+from apps.usuarios.permissions import IsDocente
+
 class EvaluacionViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated, IsDocente]
     serializer_class = EvaluacionSerializer
 
     def get_queryset(self):

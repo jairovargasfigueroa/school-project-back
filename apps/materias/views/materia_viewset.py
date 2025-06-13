@@ -1,3 +1,4 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,7 +7,10 @@ from apps.materias.serializers.materia_serializers import MateriaSerializer
 from apps.materias.services.materia_service import MateriaService
 from django.core.exceptions import ObjectDoesNotExist
 
+from apps.usuarios.permissions import IsAlumno, IsDocente
+
 class MateriaViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated, IsDocente,IsAlumno]
     serializer_class = MateriaSerializer
 
     def get_queryset(self):

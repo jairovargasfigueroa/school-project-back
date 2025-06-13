@@ -1,13 +1,16 @@
 # apps/usuarios/views/director_viewset.py
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 
 from apps.usuarios.models import Director
+from apps.usuarios.permissions import IsDirector
 from apps.usuarios.services.director_service import DirectorService
 from apps.usuarios.serializers.director_serializers import DirectorWriteSerializer, DirectorReadSerializer
 
 class DirectorViewSet(ModelViewSet):
+    permission_classes = [AllowAny]
     serializer_class = DirectorReadSerializer
 
     def get_queryset(self):

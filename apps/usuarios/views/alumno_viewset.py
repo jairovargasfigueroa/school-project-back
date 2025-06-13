@@ -1,6 +1,8 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from apps.usuarios.models import Alumno
+from apps.usuarios.permissions import IsDocente
 from apps.usuarios.serializers.alumno_serializers import AlumnoReadSerializer, AlumnoWriteSerializer
 from apps.usuarios.services.alumno_service import AlumnoService
 from rest_framework import status
@@ -8,6 +10,7 @@ from rest_framework import status
 
 
 class AlumnoViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated, IsDocente]
     
     def get_queryset(self):
         queryset = Alumno.objects.select_related("usuario", "curso")

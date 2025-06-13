@@ -2,11 +2,12 @@ from django.db import models
 
 class Asistencia(models.Model):
     alumno = models.ForeignKey('usuarios.Alumno', on_delete=models.CASCADE, related_name='asistencias')
+    curso = models.ForeignKey('cursos.Curso', on_delete=models.CASCADE, related_name='asistencias', null=True)
     materia = models.ForeignKey('materias.Materia', on_delete=models.CASCADE, related_name='asistencias')
     gestion = models.ForeignKey('gestiones.Gestion', on_delete=models.CASCADE, related_name='asistencias')
     fecha = models.DateField()
     presente = models.BooleanField()
-
+    observaciones = models.TextField(blank=True, null=True)
     class Meta:
         unique_together = ('alumno', 'materia', 'gestion', 'fecha')
         ordering = ['fecha']
