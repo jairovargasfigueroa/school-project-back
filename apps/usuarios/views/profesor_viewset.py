@@ -1,12 +1,15 @@
 # views/profesor_viewset.py
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from apps.usuarios.models import Profesor
+from apps.usuarios.permissions import IsDirector
 from apps.usuarios.services.profesor_service import ProfesorService
 from apps.usuarios.serializers.profesor_serializers import ProfesorWriteSerializer, ProfesorReadSerializer
 
 class ProfesorViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated, IsDirector]
     serializer_class = ProfesorReadSerializer
 
     def get_queryset(self):

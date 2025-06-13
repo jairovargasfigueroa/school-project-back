@@ -1,3 +1,4 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,7 +7,10 @@ from apps.notas.serializers.nota_serializers import NotaEvaluacionSerializer
 from apps.notas.services.nota_service import NotaEvaluacionService
 from django.core.exceptions import ObjectDoesNotExist
 
+from apps.usuarios.permissions import IsAlumno, IsDocente
+
 class NotaEvaluacionViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated, IsDocente,IsAlumno]
     serializer_class = NotaEvaluacionSerializer
 
     def get_queryset(self):

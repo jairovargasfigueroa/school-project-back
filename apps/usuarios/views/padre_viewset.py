@@ -1,13 +1,15 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from apps.usuarios.models import Padre
 
+from apps.usuarios.permissions import IsDirector
 from apps.usuarios.serializers.padre_serializers import PadreReadSerializer, PadreWriteSerializer
 from apps.usuarios.services.padre_service import PadreService
 
 class PadreViewSet(ModelViewSet):
-    
+    permission_classes = [IsAuthenticated, IsDirector]
     def get_queryset(self):
         queryset = Padre.objects.select_related("usuario")
 

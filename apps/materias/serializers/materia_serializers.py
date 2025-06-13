@@ -23,4 +23,4 @@ class MateriaSerializer(serializers.ModelSerializer):
             'docente_nombre',
             'gestion_anio'
         ]
-        read_only_fields = ['id', 'curso_nombre', 'docente_nombre', 'gestion_anio']
+        read_only_fields = ['id','curso_nombre', 'docente_nombre', 'gestion_anio']

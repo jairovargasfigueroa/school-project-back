@@ -4,4 +4,4 @@ from apps.gestiones.models import Gestion
 class GestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gestion
-        fields = '__all__'
+        fields = ['id', 'anio', 'descripcion', 'activa']

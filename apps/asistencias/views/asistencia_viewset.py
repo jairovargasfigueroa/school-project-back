@@ -1,3 +1,5 @@
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,16 +8,10 @@ from apps.asistencias.serializers.asistencia_serilaizers import AsistenciaSerial
 from apps.asistencias.services.asistencia_service import AsistenciaService
 from django.core.exceptions import ObjectDoesNotExist
 
-from django_filters import rest_framework as filters
-
-
-class AsistenciaFilter(filters.FilterSet):
-    class Meta:
-        model = Asistencia
-        fields = ['alumno', 'materia', 'gestion', 'fecha', 'alumno__usuario__first_name']
-
+from apps.usuarios.permissions import IsDocente
 
 class AsistenciaViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated, IsDocente]
     serializer_class = AsistenciaSerializer
 
     def get_queryset(self):
@@ -33,6 +29,23 @@ class AsistenciaViewSet(ModelViewSet):
 
         return queryset
 
+    @action(detail=False, methods=["get"])
+    def listar_o_generar(self, request):
+        materia_id = request.query_params.get("materia_id")
+        gestion_id = request.query_params.get("gestion_id")
+        fecha = request.query_params.get("fecha")
+
+        if not (materia_id and gestion_id and fecha):
+            return Response({"error": "Faltan parámetros"}, status=400)
+
+        asistencias = AsistenciaService.generar_asistencias_masivas(
+            materia_id=materia_id,
+            gestion_id=gestion_id,
+            fecha=fecha
+        )
+        serializer = AsistenciaSerializer(asistencias, many=True)
+        return Response(serializer.data)
+    
     def retrieve(self, request, pk=None):
         try:
             asistencia = AsistenciaService.obtener_asistencia_por_id(pk)

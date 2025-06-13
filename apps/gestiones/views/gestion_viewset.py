@@ -1,4 +1,5 @@
 # views/gestion_viewset.py
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,9 +7,11 @@ from apps.gestiones.models import Gestion
 from apps.gestiones.serializers.gestiones_serializers import GestionSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from apps.gestiones.services.gestiones_services import GestionService
+from apps.usuarios.permissions import IsDirector
 
 
 class GestionViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated, IsDirector]
     serializer_class = GestionSerializer
 
     def get_queryset(self):
