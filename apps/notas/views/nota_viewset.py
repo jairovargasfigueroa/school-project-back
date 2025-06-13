@@ -22,7 +22,7 @@ class NotaEvaluacionViewSet(ModelViewSet):
         if gestion_id:
             queryset = queryset.filter(evaluacion__gestion_id=gestion_id)
 
-        return queryset
+        return queryset.order_by('-id')
 
     def retrieve(self, request, pk=None):
         try:

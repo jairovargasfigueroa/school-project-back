@@ -9,14 +9,14 @@ from apps.materias.models import Materia
 
 from django_filters import rest_framework as filters
 
-class MateriasFilter(filters.FilterSet):
-    class Meta:
-        model = Materia
-        fields = {
-            'curso_id': ['exact'],
-            'docente_id': ['exact'],
-            'gestion_id': ['exact'],
-        }
+# class MateriasFilter(filters.FilterSet):
+#     class Meta:
+#         model = Materia
+#         fields = {
+#             'curso_id': ['exact'],
+#             'docente_id': ['exact'],
+#             'gestion_id': ['exact'],
+#         }
 
 class MateriaViewSet(ModelViewSet):
     serializer_class = MateriaSerializer
@@ -25,11 +25,15 @@ class MateriaViewSet(ModelViewSet):
         queryset = Materia.objects.all()
         nombre = self.request.query_params.get("nombre")
         curso_id = self.request.query_params.get("curso_id")
+        docente_id = self.request.query_params.get("docente_id")
+
 
         if nombre:
             queryset = queryset.filter(nombre__icontains=nombre)
         if curso_id:
             queryset = queryset.filter(curso_id=curso_id)
+        if docente_id:
+            queryset = queryset.filter(docente_id=docente_id)
 
         return queryset
 
