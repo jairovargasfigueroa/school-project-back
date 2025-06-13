@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from apps.usuarios.permissions import IsAlumno, IsDocente
 
 class MateriaViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated, IsDocente,IsAlumno]
+    permission_classes = [IsAuthenticated, IsDocente|IsAlumno]
     serializer_class = MateriaSerializer
 
     def get_queryset(self):
