@@ -160,13 +160,14 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','school_project_back.settings')
 django.setup()
 
 from django.contrib.auth import get_user_model
-from apps.usuarios.models import Alumno, Profesor
+from apps.usuarios.models import Alumno, Profesor, Padre
 from apps.cursos.models import Curso
 from apps.gestiones.models import Gestion
 from apps.materias.models import Materia
 from apps.evaluaciones.models import Evaluacion
 from apps.notas.models import NotaEvaluacion
 from apps.asistencias.models import Asistencia
+
 
 User = get_user_model()
 fake = Faker()

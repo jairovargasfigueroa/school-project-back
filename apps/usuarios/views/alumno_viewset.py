@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from apps.usuarios.models import Alumno
@@ -17,7 +17,7 @@ class AlumnoFilter(filters.FilterSet):
         }
 
 class AlumnoViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated, IsDocente]
+    permission_classes = [AllowAny]
     
     def get_queryset(self):
         queryset = Alumno.objects.select_related("usuario", "curso")

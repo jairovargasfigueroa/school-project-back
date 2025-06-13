@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.usuarios.models import Padre
+from apps.usuarios.models import Padre, Usuario
 from apps.usuarios.models import Alumno
 
 class PadreReadSerializer(serializers.ModelSerializer):
@@ -32,3 +32,26 @@ class PadreWriteSerializer(serializers.Serializer):
     genero = serializers.CharField()
     estado = serializers.CharField()
     ocupacion = serializers.CharField()
+
+    def create(self, validated_data):
+        # Separar datos del usuario y del padre
+        user_data = {
+            'username': validated_data.pop('username'),
+            'password': validated_data.pop('password'),
+            'email': validated_data.pop('email'),
+            'first_name': validated_data.pop('first_name'),
+            'last_name': validated_data.pop('last_name'),
+            'rol': validated_data.pop('rol'),
+            'ci': validated_data.pop('ci'),
+            'telefono': validated_data.pop('telefono'),
+            'genero': validated_data.pop('genero'),
+            'estado': validated_data.pop('estado'),
+        }
+
+        # Crear usuario con contraseña hasheada
+        user = Usuario.objects.create_user(**user_data)
+
+        # Crear Padre relacionado
+        padre = Padre.objects.create(usuario=user, ocupacion=validated_data['ocupacion'])
+
+        return padre

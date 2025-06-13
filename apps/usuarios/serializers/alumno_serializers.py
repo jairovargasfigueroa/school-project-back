@@ -46,6 +46,7 @@ class AlumnoWriteSerializer(serializers.Serializer):
     fecha_nacimiento = serializers.DateField()
     direccion = serializers.CharField()
     curso_id = serializers.IntegerField()
+    padre_id = serializers.IntegerField(required=False, allow_null=True)
     
     
 
@@ -81,5 +82,6 @@ class AlumnoReadSerializer(serializers.ModelSerializer):
             'genero',
             'estado',
             'curso_id',
-            'curso_nombre'
+            'curso_nombre',
+            'padre_id',
         ]
